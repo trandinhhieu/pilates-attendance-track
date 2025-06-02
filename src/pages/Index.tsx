@@ -15,7 +15,7 @@ const Index = () => {
             </div>
           </div>
           <h1 className="text-5xl font-bold text-gray-900 mb-4">
-            EduTrack
+            Recharged
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Modern attendance tracking system with Apple & Google Wallet integration. 

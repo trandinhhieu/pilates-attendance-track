@@ -76,7 +76,7 @@ const WalletCardPreview = () => {
                 {/* Header */}
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-bold">EduTrack</h3>
+                    <h3 className="text-lg font-bold">Recharged</h3>
                     <p className="text-blue-100 text-sm">Training Center</p>
                   </div>
                   <div className="text-right">
