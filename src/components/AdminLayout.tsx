@@ -49,7 +49,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
         <div className="flex items-center justify-between h-16 px-4 border-b border-gray-200">
           <div className="flex items-center">
             <GraduationCap className="h-8 w-8 text-blue-600" />
-            <span className="ml-2 text-xl font-bold text-gray-900">EduTrack</span>
+            <span className="ml-2 text-xl font-bold text-gray-900">Recharged</span>
           </div>
           <Button
             variant="ghost"
