@@ -2,7 +2,7 @@
 import { useParams, Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, Smartphone, CheckCircle2, Circle } from "lucide-react";
+import { ArrowLeft, Download, Smartphone } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const WalletCardPreview = () => {
@@ -31,21 +31,46 @@ const WalletCardPreview = () => {
     );
   }
 
-  // Generate attendance progress icons
   const totalSessions = parseInt(studentData.sessions);
   const attendedSessions = studentData.attendedSessions || 0;
-  const progressIcons = Array.from({ length: totalSessions }, (_, index) => (
-    <div key={index} className="flex items-center justify-center">
-      {index < attendedSessions ? (
-        <CheckCircle2 className="h-3 w-3 text-green-500 fill-current" />
-      ) : (
-        <Circle className="h-3 w-3 text-gray-300" />
-      )}
-    </div>
-  ));
+
+  // Custom SVG icon component for sessions
+  const SessionIcon = ({ filled }: { filled: boolean }) => (
+    <svg 
+      fill={filled ? "#8B4513" : "#D3D3D3"} 
+      height="24px" 
+      width="24px" 
+      version="1.1" 
+      xmlns="http://www.w3.org/2000/svg" 
+      viewBox="-351 153 256 256"
+      className="transition-colors duration-300"
+    >
+      <circle cx="-222.3" cy="188.5" r="31.1"></circle>
+      <path d="M-106.6,332.4c-0.4-0.6-0.9-1.1-1.4-1.6l-35.3-32.8l-22.8-49c-6.2-12.5-15.2-20.3-28.6-20.3h-57.5
+               c-13.5,0-22.4,7.8-28.6,20.3l-22.8,49l-35.3,32.8c-0.5,0.5-1,1.1-1.4,1.6c-3.6,3.1-5.9,7.7-5.9,12.8c0,9.3,7.6,16.9,16.9,16.9
+               c5.5,0,10.3-2.6,13.4-6.7c0.3-0.2,0.6-0.5,0.8-0.7l37.4-34.8c1.4-1.4,2.5-3,3.3-4.8l11.9-25.5l-0.6,45l-52.2,28.4
+               c-9.5,5.2-14,16.4-10.6,26.7c3.4,10.3,13.6,16.7,24.3,15.2l78.1-20.2l78.1,20.2c10.7,1.5,21-4.9,24.3-15.2
+               c3.4-10.3-1.1-21.5-10.6-26.7l-52.2-28.5l-0.6-45l11.9,25.5c0.8,1.8,2,3.4,3.3,4.8l37.4,34.8c0.3,0.3,0.5,0.5,0.8,0.7
+               c3.1,4,7.9,6.7,13.4,6.7c9.3,0,16.9-7.6,16.9-16.9C-100.7,340-103,335.5-106.6,332.4z"></path>
+    </svg>
+  );
+
+  // Generate attendance progress icons with responsive layout
+  const generateProgressIcons = () => {
+    const icons = [];
+    for (let i = 0; i < totalSessions; i++) {
+      icons.push(
+        <div key={i} className="flex items-center justify-center p-1">
+          <SessionIcon filled={i < attendedSessions} />
+        </div>
+      );
+    }
+    return icons;
+  };
 
   const expirationDate = new Date();
   expirationDate.setMonth(expirationDate.getMonth() + 6);
+  const formattedExpirationDate = expirationDate.toLocaleDateString('en-GB');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-100">
@@ -71,55 +96,56 @@ const WalletCardPreview = () => {
             <div className="bg-white p-6 rounded-xl shadow-xl">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Card Preview</h2>
               
-              {/* Apple Wallet Style Card */}
-              <div className="bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl p-6 text-white shadow-lg max-w-sm mx-auto">
-                {/* Header */}
-                <div className="flex justify-between items-start mb-4">
+              {/* Apple/Google Wallet Style Card */}
+              <div className="bg-gradient-to-br from-amber-50 to-orange-100 rounded-2xl p-6 shadow-lg max-w-sm mx-auto border border-orange-200">
+                {/* Header Section */}
+                <div className="flex justify-between items-start mb-6">
                   <div>
-                    <h3 className="text-lg font-bold">Recharged</h3>
-                    <p className="text-blue-100 text-sm">Training Center</p>
+                    <h3 className="text-lg font-bold text-amber-900">Pilates Studio By R...</h3>
+                    <p className="text-amber-700 text-sm font-medium">Training Center</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-blue-100">Student ID</p>
-                    <p className="font-mono text-sm">{studentData.studentId}</p>
+                    <p className="text-xs text-amber-600 font-semibold">VALID UNTIL</p>
+                    <p className="text-sm font-bold text-amber-900">{formattedExpirationDate}</p>
                   </div>
                 </div>
 
                 {/* Student Info */}
-                <div className="mb-4">
-                  <h4 className="text-xl font-bold">{studentData.fullName}</h4>
-                  <p className="text-blue-100 text-sm">{studentData.email}</p>
+                <div className="mb-6">
+                  <h4 className="text-xl font-bold text-amber-900">{studentData.fullName}</h4>
+                  <p className="text-amber-700 text-sm">ID: {studentData.studentId}</p>
                 </div>
 
-                {/* Sessions Info */}
-                <div className="flex justify-between items-center mb-4">
-                  <div>
-                    <p className="text-xs text-blue-100">Sessions</p>
-                    <p className="text-lg font-bold">{attendedSessions} / {totalSessions}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-blue-100">Expires</p>
-                    <p className="text-sm">{expirationDate.toLocaleDateString()}</p>
+                {/* Service Info */}
+                <div className="mb-6">
+                  <p className="text-xs text-amber-600 font-semibold uppercase tracking-wide">SERVICE</p>
+                  <p className="text-lg font-bold text-amber-900">Pilates Training</p>
+                </div>
+
+                {/* Attendance Progress Icons */}
+                <div className="mb-6">
+                  <p className="text-xs text-amber-600 font-semibold uppercase tracking-wide mb-3">
+                    Sessions Progress ({attendedSessions}/{totalSessions})
+                  </p>
+                  <div className={`grid gap-1 justify-center ${
+                    totalSessions <= 5 ? 'grid-cols-5' :
+                    totalSessions <= 10 ? 'grid-cols-5' :
+                    totalSessions <= 15 ? 'grid-cols-5' :
+                    'grid-cols-5'
+                  }`}>
+                    {generateProgressIcons()}
                   </div>
                 </div>
 
-                {/* Visual Attendance Tracker */}
-                <div className="mb-4">
-                  <p className="text-xs text-blue-100 mb-2">Attendance Progress</p>
-                  <div className={`grid gap-1 ${totalSessions <= 10 ? 'grid-cols-10' : totalSessions <= 15 ? 'grid-cols-15' : 'grid-cols-20'}`}>
-                    {progressIcons}
-                  </div>
-                </div>
-
-                {/* Barcode Area */}
-                <div className="bg-white rounded p-3 text-center">
-                  <div className="bg-gray-900 h-16 rounded mb-2 flex items-center justify-center">
-                    <div className="text-white text-xs font-mono">
-                      ||||| |||| ||||| |||||| |||||
+                {/* Barcode Section */}
+                <div className="bg-white rounded-lg p-4 text-center border border-amber-200">
+                  <div className="bg-gray-900 h-16 rounded mb-3 flex items-center justify-center">
+                    <div className="text-white text-xs font-mono tracking-wider">
+                      |||||| |||| ||||| |||||| |||||
                     </div>
                   </div>
-                  <p className="text-gray-600 text-xs font-mono">{studentData.studentId}</p>
-                  <p className="text-gray-500 text-xs">CODE128</p>
+                  <p className="text-gray-600 text-xs font-mono mb-1">{studentData.studentId}</p>
+                  <p className="text-gray-500 text-xs">Tap ••• for details</p>
                 </div>
               </div>
             </div>
@@ -144,7 +170,7 @@ const WalletCardPreview = () => {
                     </Button>
                   </div>
 
-                  <div className="mt-6 p-4 bg-amber-50 rounded-lg">
+                  <div className="mt-6 p-4 bg-amber-50 rounded-lg border border-amber-200">
                     <h4 className="font-medium text-amber-800 mb-2">📱 How to use your card:</h4>
                     <ul className="text-sm text-amber-700 space-y-1">
                       <li>• Open your Wallet app to find your card</li>
